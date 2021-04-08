@@ -2,10 +2,10 @@ package main
 
 import (
 	"errors"
+	"fmt"
 )
 
 type ArrayDynamicer interface {
-	Init()
 	Get()
 	Push()
 	Pop()
@@ -19,8 +19,11 @@ type Arrays struct {
 	data []int
 }
 
-func (a Arrays) Init() {
-	a.data = make([]int, 1)
+func New() Arrays {
+	a := Arrays{make([]int, 0, 1)}
+	fmt.Printf("len: %d capacity: %d\n", len(a.data), cap(a.data))
+
+	return a
 }
 
 func (a Arrays) Get(index int) (int, error) {
@@ -31,13 +34,20 @@ func (a Arrays) Get(index int) (int, error) {
 	return a.data[index], nil
 }
 
-func (a Arrays) Push(value int) int {
+func (a *Arrays) Push(value int) int {
+	var newSlice []int
 	if len(a.data) == cap(a.data) {
 		// We can do something better with append
-		a.data = make([]int, cap(a.data)*2)
+		newSlice = make([]int, len(a.data)+1, cap(a.data)*2)
+
+	} else {
+		newSlice = make([]int, len(a.data)+1, cap(a.data))
 	}
 
-	a.data[len(a.data)] = value
+	copy(newSlice, a.data)
+	a.data = newSlice
+	a.data[len(a.data)-1] = value
+	fmt.Println(len(a.data), cap(a.data), a.data)
 
 	return value
 }
@@ -58,6 +68,7 @@ func (a Arrays) GetLength() int {
 }
 
 func (a Arrays) GetCapacity() int {
+	fmt.Printf("capacity: %d\n", cap(a.data))
 	return cap(a.data)
 }
 
