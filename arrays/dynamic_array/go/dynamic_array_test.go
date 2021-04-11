@@ -2,7 +2,6 @@ package main
 
 import (
 	"testing"
-
 )
 
 func ValidateLengthCapacity(t *testing.T, actualLen int, expectedLen int, actualCap int, expectedCap int) {
@@ -137,3 +136,56 @@ func TestPop(t *testing.T) {
 		t.Errorf("Error actual = %v", error)
 	}
 }
+
+/*
+public void testDeleteAtIndex() {
+	Integer value = ad.deleteAtIndex(0);
+	assertNull(value, "Should be null");
+
+	ad.push(2);
+	ad.push(4);
+	ad.push(8);
+	ad.push(16);
+	ad.push(32);
+	ad.push(64);
+	ad.push(128);
+	assertEquals(8, ad.getCapacity(), "Capacity should be 8");
+	assertEquals(7, ad.getLength(), "Length should be 7");
+
+	value = ad.get(2);
+	Integer value2 = ad.deleteAtIndex(2);
+	assertEquals(value, value2, "Should be the same value");
+	assertEquals(6, ad.getLength(), "Length should be 6");
+	assertEquals(8, ad.getCapacity(), "Capacity should be 8");
+	value = ad.get(2);
+	assertEquals(16, value, "Should be the same value");
+
+	value = ad.get(0);
+	value2 = ad.deleteAtIndex(0);
+	assertEquals(value, value2, "Should be the same value");
+	assertEquals(5, ad.getLength(), "Length should be 5");
+	assertEquals(8, ad.getCapacity(), "Capacity should be 8");
+	value = ad.get(0);
+	assertEquals(4, value, "Should be the same value");
+
+	value = ad.get(3);
+	value2 = ad.deleteAtIndex(3);
+	assertEquals(value, value2, "Should be the same value");
+	assertEquals(4, ad.getLength(), "Length should be 4");
+	assertEquals(8, ad.getCapacity(), "Capacity should be 8");
+	value = ad.get(3);
+	assertEquals(128, value, "Should be the same value");
+
+	ad.deleteAtIndex(3);
+	assertEquals(3, ad.getLength(), "Length should be 3");
+	ad.deleteAtIndex(2);
+	assertEquals(2, ad.getLength(), "Length should be 2");
+	ad.deleteAtIndex(1);
+	assertEquals(1, ad.getLength(), "Length should be 1");
+	ad.deleteAtIndex(0);
+	assertEquals(0, ad.getLength(), "Length should be 0");
+
+	value = ad.deleteAtIndex(50);
+	assertNull(value, "Should be a null value");
+}
+*/
