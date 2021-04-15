@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+
 )
 
 func ValidateLengthCapacity(t *testing.T, actualLen int, expectedLen int, actualCap int, expectedCap int) {
@@ -137,55 +138,52 @@ func TestPop(t *testing.T) {
 	}
 }
 
-/*
-public void testDeleteAtIndex() {
-	Integer value = ad.deleteAtIndex(0);
-	assertNull(value, "Should be null");
+func TestDeleteAtIndex(t *testing.T) {
+	var dynamic Arrays = New()
 
-	ad.push(2);
-	ad.push(4);
-	ad.push(8);
-	ad.push(16);
-	ad.push(32);
-	ad.push(64);
-	ad.push(128);
-	assertEquals(8, ad.getCapacity(), "Capacity should be 8");
-	assertEquals(7, ad.getLength(), "Length should be 7");
+	_, error := dynamic.DeleteAtIndex(0)
+	if error == nil {
+		t.Errorf("Error actual = %v", error)
+	}
 
-	value = ad.get(2);
-	Integer value2 = ad.deleteAtIndex(2);
-	assertEquals(value, value2, "Should be the same value");
-	assertEquals(6, ad.getLength(), "Length should be 6");
-	assertEquals(8, ad.getCapacity(), "Capacity should be 8");
-	value = ad.get(2);
-	assertEquals(16, value, "Should be the same value");
+	dynamic.Push(2)
+	dynamic.Push(4)
+	dynamic.Push(8)
+	dynamic.Push(16)
+	dynamic.Push(32)
+	dynamic.Push(64)
+	dynamic.Push(128)
 
-	value = ad.get(0);
-	value2 = ad.deleteAtIndex(0);
-	assertEquals(value, value2, "Should be the same value");
-	assertEquals(5, ad.getLength(), "Length should be 5");
-	assertEquals(8, ad.getCapacity(), "Capacity should be 8");
-	value = ad.get(0);
-	assertEquals(4, value, "Should be the same value");
+	ValidateLengthCapacity(t, dynamic.GetLength(), 7, dynamic.GetCapacity(), 8)
 
-	value = ad.get(3);
-	value2 = ad.deleteAtIndex(3);
-	assertEquals(value, value2, "Should be the same value");
-	assertEquals(4, ad.getLength(), "Length should be 4");
-	assertEquals(8, ad.getCapacity(), "Capacity should be 8");
-	value = ad.get(3);
-	assertEquals(128, value, "Should be the same value");
+	actual, error := dynamic.DeleteAtIndex(2)
+	ValidateValueAndError(t, actual, 8, error)
+	ValidateLengthCapacity(t, dynamic.GetLength(), 6, dynamic.GetCapacity(), 8)
 
-	ad.deleteAtIndex(3);
-	assertEquals(3, ad.getLength(), "Length should be 3");
-	ad.deleteAtIndex(2);
-	assertEquals(2, ad.getLength(), "Length should be 2");
-	ad.deleteAtIndex(1);
-	assertEquals(1, ad.getLength(), "Length should be 1");
-	ad.deleteAtIndex(0);
-	assertEquals(0, ad.getLength(), "Length should be 0");
+	actual, error = dynamic.Get(2)
+	ValidateValueAndError(t, actual, 16, error)
 
-	value = ad.deleteAtIndex(50);
-	assertNull(value, "Should be a null value");
+	actual, error = dynamic.DeleteAtIndex(0)
+	ValidateValueAndError(t, actual, 2, error)
+	ValidateLengthCapacity(t, dynamic.GetLength(), 5, dynamic.GetCapacity(), 8)
+
+	actual, error = dynamic.Get(0)
+	ValidateValueAndError(t, actual, 4, error)
+
+	actual, error = dynamic.DeleteAtIndex(3)
+	ValidateValueAndError(t, actual, 64, error)
+	ValidateLengthCapacity(t, dynamic.GetLength(), 4, dynamic.GetCapacity(), 8)
+
+	actual, error = dynamic.Get(3)
+	ValidateValueAndError(t, actual, 128, error)
+
+	for idx := 3; idx >= 0; idx-- {
+		dynamic.DeleteAtIndex(idx)
+		ValidateLengthCapacity(t, dynamic.GetLength(), idx, dynamic.GetCapacity(), 8)
+	}
+
+	_, error = dynamic.DeleteAtIndex(0)
+	if error == nil {
+		t.Errorf("Error actual = %v", error)
+	}
 }
-*/

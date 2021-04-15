@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+
 )
 
 type ArrayDynamicer interface {
@@ -66,8 +67,8 @@ func (a Arrays) GetCapacity() int {
 	return cap(a.data)
 }
 
-func (a Arrays) DeleteAtIndex(index int) (int, error) {
-	if index < 0 || index > len(a.data) {
+func (a *Arrays) DeleteAtIndex(index int) (int, error) {
+	if index < 0 || index >= len(a.data) {
 		return -1, errors.New("invalid index - can not delete value")
 	}
 
@@ -77,7 +78,7 @@ func (a Arrays) DeleteAtIndex(index int) (int, error) {
 	return value, nil
 }
 
-func (a Arrays) ShiftElements(index int) {
+func (a *Arrays) ShiftElements(index int) {
 	if index >= 0 && index < len(a.data) {
 		for idx := index; idx < len(a.data)-1; idx++ {
 			a.data[idx] = a.data[idx+1]
