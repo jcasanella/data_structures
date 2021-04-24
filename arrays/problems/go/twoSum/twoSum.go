@@ -17,9 +17,7 @@ func twoSum(nums []int, target int) []int {
 		for idx2 := idx + 1; idx2 < len(nums); idx2++ {
 
 			if nums[idx2] == expected {
-				output := make([]int, 2, 2)
-				output[0] = idx
-				output[1] = idx2
+				output := []int{idx, idx2}
 				return output
 			}
 		}
