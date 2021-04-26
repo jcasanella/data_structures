@@ -27,21 +27,11 @@ func twoSum(nums []int, target int) []int {
 func twoSumOptimized(nums []int, target int) []int {
 	values := make(map[int]int)
 
-	for index, value := range nums {
-		values[value] = index
-	}
-
-	for idx := 0; idx < len(nums)-1; idx++ {
-		lookFor := target - nums[idx]
-		if lookFor != nums[idx] {
-
-			value, found := values[lookFor]
-
-			if found {
-				output := []int{idx, value}
-				return output
-			}
+	for k, v := range nums {
+		if idx, ok := values[target-v]; ok {
+			return []int{idx, k}
 		}
+		values[v] = k
 	}
 
 	return nil

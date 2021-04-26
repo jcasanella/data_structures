@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 )
@@ -10,9 +9,6 @@ func CheckValues(actual []int, expected []int, t *testing.T) {
 	if len(actual) != len(expected) {
 		t.Errorf("Actual len %d is different than len %d expected\n", len(actual), len(expected))
 	}
-
-	fmt.Printf("%d %d\n", actual[0], actual[1])
-	fmt.Printf("%d %d\n", expected[0], expected[1])
 
 	for index, value := range actual {
 		if value != expected[index] {
@@ -62,8 +58,28 @@ func TestCase2B(t *testing.T) {
 }
 
 func TestCase3A(t *testing.T) {
-	numbers := []int{3, 3, 3}
-	target := 6
+	numbers := []int{0, 8, 7, 3, 3, 4, 2}
+	target := 11
+
+	expected := []int{1, 3}
+	actual := twoSum(numbers, target)
+
+	CheckValues(actual, expected, t)
+}
+
+func TestCase3B(t *testing.T) {
+	numbers := []int{0, 8, 7, 3, 3, 4, 2}
+	target := 11
+
+	expected := []int{1, 3}
+	actual := twoSumOptimized(numbers, target)
+
+	CheckValues(actual, expected, t)
+}
+
+func TestCase4A(t *testing.T) {
+	numbers := []int{0, 1}
+	target := 1
 
 	expected := []int{0, 1}
 	actual := twoSum(numbers, target)
@@ -71,11 +87,31 @@ func TestCase3A(t *testing.T) {
 	CheckValues(actual, expected, t)
 }
 
-func TestCase3B(t *testing.T) {
-	numbers := []int{3, 3, 3}
-	target := 6
+func TestCase4B(t *testing.T) {
+	numbers := []int{0, 1}
+	target := 1
 
 	expected := []int{0, 1}
+	actual := twoSumOptimized(numbers, target)
+
+	CheckValues(actual, expected, t)
+}
+
+func TestCase5A(t *testing.T) {
+	numbers := []int{0, 3}
+	target := 5
+
+	expected := []int{}
+	actual := twoSum(numbers, target)
+
+	CheckValues(actual, expected, t)
+}
+
+func TestCase5B(t *testing.T) {
+	numbers := []int{0, 3}
+	target := 5
+
+	expected := []int{}
 	actual := twoSumOptimized(numbers, target)
 
 	CheckValues(actual, expected, t)
