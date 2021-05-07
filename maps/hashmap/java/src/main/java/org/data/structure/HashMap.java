@@ -1,7 +1,9 @@
 package org.data.structure;
 
+import java.util.Arrays;
+
 public class HashMap {
-     class Bucket {
+     private class Bucket {
         String key;
         int value;
         Bucket next;
@@ -25,7 +27,7 @@ public class HashMap {
 
     private int getBucketIndex(String key) {
         int hashCode = key.hashCode();
-        int index = hashCode % numBuckets;
+        int index = hashCode % this.numBuckets;
         // key.hashCode() coule be negative.
         index = index < 0 ? index * -1 : index;
         return index;
@@ -40,15 +42,18 @@ public class HashMap {
         } else { // Collision
             Bucket existing = this.bucket[posic];
             boolean existingKey = false;
-
-            do {
-                if (existing.key.equalsIgnoreCase(key)) {
-                    existingKey = true;
-                    existing.value = value;
-                } else {
+            if (existing.key.equalsIgnoreCase(key)) {
+                existing.value = value;
+                existingKey = true;
+            } else {
+                while (existing.next != null && !existingKey) {
                     existing = existing.next;
+                    if (existing.key.equalsIgnoreCase(key)) {
+                        existing.value = value;
+                        existingKey = true;
+                    }
                 }
-            } while (existing.next != null && !existingKey);
+            }
 
             if (!existingKey) {
                 Bucket newData = new Bucket(key, value);
@@ -57,7 +62,50 @@ public class HashMap {
             }
         }
 
-        // if load factor close to 80, increase capacity and recollocate data
+        // if load factor close to 80, increase capacity and reallocate data
+    }
+
+    public Integer get(String key) {
+        int posic = getBucketIndex(key);
+        Bucket bucket = this.bucket[posic];
+        if (bucket == null) {
+            return null;
+        }
+
+        if (bucket.key.equalsIgnoreCase(key)) {
+            return bucket.value;
+        }
+
+        while (bucket.next != null) {
+            bucket = bucket.next;
+            if (bucket.key.equalsIgnoreCase(key)) {
+                return bucket.value;
+            }
+        }
+
+        return null;
+    }
+
+    String[] getKeys() {
+        if (numElems == 0) {
+            return null;
+        }
+
+        int posic = 0;
+        String[] keys = new String[this.numElems];
+        for (int idx=0; idx<this.numBuckets; idx++) {
+            if (this.bucket[idx] != null) {
+                Bucket bucket = this.bucket[idx];
+                keys[posic++] = bucket.key;
+
+                while (bucket.next != null) {
+                    bucket = bucket.next;
+                    keys[posic++] = bucket.key;
+                }
+            }
+        }
+
+        return keys;
     }
 
     public static void main(String[] args) {
@@ -75,6 +123,9 @@ public class HashMap {
         hm.add("key10", 9);
         hm.add("key11", 10);
         hm.add("key12", 11);
+
+        String[] keys = hm.getKeys();
+        Arrays.stream(keys).forEach(System.out::println);
     }
 
 }
