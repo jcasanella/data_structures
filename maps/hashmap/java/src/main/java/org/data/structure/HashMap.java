@@ -33,36 +33,82 @@ public class HashMap {
         return index;
     }
 
-    public void add(String key, int value) {
-        int posic = getBucketIndex(key);
-        if (this.bucket[posic] == null) {   // No collision
-            Bucket newData = new Bucket(key, value);
-            this.bucket[posic] = newData;
-            this.numElems++;
-        } else { // Collision
-            Bucket existing = this.bucket[posic];
-            boolean existingKey = false;
-            if (existing.key.equalsIgnoreCase(key)) {
-                existing.value = value;
-                existingKey = true;
-            } else {
-                while (existing.next != null && !existingKey) {
-                    existing = existing.next;
-                    if (existing.key.equalsIgnoreCase(key)) {
-                        existing.value = value;
-                        existingKey = true;
-                    }
-                }
-            }
+    private void addNoCollision(String key, int value, int posic) {
+        Bucket newData = new Bucket(key, value);
+        this.bucket[posic] = newData;
+        this.numElems++;
+    }
 
-            if (!existingKey) {
-                Bucket newData = new Bucket(key, value);
-                existing.next = newData;
-                this.numElems++;
+    private void addCollision(String key, int value, int posic) {
+        Bucket existing = this.bucket[posic];
+        boolean existingKey = false;
+        if (existing.key.equalsIgnoreCase(key)) {
+            existing.value = value;
+            existingKey = true;
+        } else {
+            while (existing.next != null && !existingKey) {
+                existing = existing.next;
+                if (existing.key.equalsIgnoreCase(key)) {
+                    existing.value = value;
+                    existingKey = true;
+                }
             }
         }
 
+        if (!existingKey) {
+            Bucket newData = new Bucket(key, value);
+            existing.next = newData;
+            this.numElems++;
+        }
+    }
+
+    public void add(String key, int value) {
+        int posic = getBucketIndex(key);
+        if (this.bucket[posic] == null) {   // No collision
+            addNoCollision(key, value, posic);
+        } else { // Collision
+            addCollision(key, value, posic);
+        }
+
         // if load factor close to 80, increase capacity and reallocate data
+    }
+
+    private boolean removeFirstElementBucket(Bucket bucket, int posic) {
+        // check if there're more elements
+        if (bucket.next == null) {
+            this.bucket[posic] = null;
+        } else {
+            this.bucket[posic] = bucket.next;
+        }
+
+        this.numElems--;
+        return true;
+    }
+
+    public boolean remove(String key) {
+        int posic = getBucketIndex(key);
+        if (this.bucket[posic] == null) {   // key does not exists
+            return false;
+        }
+
+        // First element bucket
+        Bucket bucket = this.bucket[posic];
+        if (bucket.key.equalsIgnoreCase(key)) {
+            return removeFirstElementBucket(bucket, posic);
+        } else {
+            // Iterate list to find out node with key
+            while (bucket.next != null) {
+                if (bucket.next.key.equalsIgnoreCase(key)) {
+                    bucket = bucket.next.next;
+                    this.numElems--;
+                    return true;
+                }
+
+                bucket = bucket.next;
+            }
+        }
+
+        return false;
     }
 
     public Integer get(String key) {
@@ -126,6 +172,8 @@ public class HashMap {
 
         String[] keys = hm.getKeys();
         Arrays.stream(keys).forEach(System.out::println);
+
+        System.out.println(hm.get("key8"));
     }
 
 }
