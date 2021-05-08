@@ -85,6 +85,21 @@ public class HashMap {
         return true;
     }
 
+    private boolean removeFromList(Bucket bucket, String key) {
+        // Iterate list to find out node with key
+        while (bucket.next != null) {
+            if (bucket.next.key.equalsIgnoreCase(key)) {
+                bucket = bucket.next.next;
+                this.numElems--;
+                return true;
+            }
+
+            bucket = bucket.next;
+        }
+
+        return false;
+    }
+
     public boolean remove(String key) {
         int posic = getBucketIndex(key);
         if (this.bucket[posic] == null) {   // key does not exists
@@ -96,19 +111,8 @@ public class HashMap {
         if (bucket.key.equalsIgnoreCase(key)) {
             return removeFirstElementBucket(bucket, posic);
         } else {
-            // Iterate list to find out node with key
-            while (bucket.next != null) {
-                if (bucket.next.key.equalsIgnoreCase(key)) {
-                    bucket = bucket.next.next;
-                    this.numElems--;
-                    return true;
-                }
-
-                bucket = bucket.next;
-            }
+            return removeFromList(bucket, key);
         }
-
-        return false;
     }
 
     public Integer get(String key) {
