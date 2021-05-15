@@ -1,10 +1,5 @@
 package hashmap
 
-import (
-	"fmt"
-	"hash/fnv"
-)
-
 type bucket struct {
 	key   string
 	value int
@@ -13,7 +8,7 @@ type bucket struct {
 
 type Hashmap struct {
 	buckets     []bucket
-	numElements int
+	numElements uint
 }
 
 type Hashmaper interface {
@@ -21,6 +16,7 @@ type Hashmaper interface {
 	Remove(key string) bool
 	Get(key string) int
 	GetKeys() []string
+	Size() uint
 }
 
 func NewHashmap(numBuckets int) *Hashmap {
@@ -30,26 +26,37 @@ func NewHashmap(numBuckets int) *Hashmap {
 	return hashmap
 }
 
-func getHashCode(key string) uint32 {
-	algorithm := fnv.New32a()
-	algorithm.Write([]byte(key))
-	return algorithm.Sum32()
+func (fm *Hashmap) getBucketIndex(key string) int {
+	hash := 0
+	r := []rune(key)
+	for _, value := range r {
+		hash = (13*hash + int(value)) % len(fm.buckets)
+	}
+
+	return hash
 }
 
-func (fm *Hashmap) getBucketIndex(key string) uint32 {
-	hashCode := getHashCode(key)
-	idx := hashCode % uint32(cap(fm.buckets))
-	return idx
+func (fm *Hashmap) addWithNoCollision(key string, value int, posic int) {
+	fm.buckets[posic].key = key
+	fm.buckets[posic].value = value
+	fm.numElements++
 }
+
+// func (fm *Hashmap) addWithCollision(key string, value int, posic int) {
+
+// }
 
 func (hm *Hashmap) Add(key string, value int) {
-	// idx := hm.getBucketIndex(key)
-	fmt.Printf("%#v", hm.buckets)
+	posic := hm.getBucketIndex(key)
 
-	// int posic = getBucketIndex(key);
-	// if (this.bucket[posic] == null) {   // No collision
-	// 	addNoCollision(key, value, posic);
-	// } else { // Collision
-	// 	addCollision(key, value, posic);
+	if hm.buckets[posic].key == "" {
+		hm.addWithNoCollision(key, value, posic)
+	}
+	// } else {
+	// 	addWithCollision(key, value, posic)
 	// }
+}
+
+func (hm *Hashmap) Size() uint {
+	return hm.numElements
 }
