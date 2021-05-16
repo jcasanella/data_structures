@@ -16,4 +16,6 @@ func main() {
 
 	numElems := hm.Size()
 	fmt.Printf("%d elements \n", numElems)
+
+	hm.Get("k")
 }

@@ -1,5 +1,7 @@
 package hashmap
 
+import "fmt"
+
 type bucket struct {
 	key   string
 	value int
@@ -14,7 +16,7 @@ type Hashmap struct {
 type Hashmaper interface {
 	Add(key string, value int)
 	Remove(key string) bool
-	Get(key string) int
+	Get(key string) (int, bool)
 	GetKeys() []string
 	Size() uint
 }
@@ -59,4 +61,21 @@ func (hm *Hashmap) Add(key string, value int) {
 
 func (hm *Hashmap) Size() uint {
 	return hm.numElements
+}
+
+func (hm *Hashmap) Get(key string) (int, bool) {
+	posic := hm.getBucketIndex(key)
+	if hm.buckets[posic].key == "" {
+		return 0, true
+	}
+
+	_ = posic
+
+	fmt.Printf("%v\n", hm.buckets)
+
+	//if hm.buckets[posic] == nil {
+	//
+	//	}
+
+	return 0, false
 }
