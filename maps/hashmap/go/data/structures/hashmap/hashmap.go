@@ -44,19 +44,40 @@ func (fm *Hashmap) addWithNoCollision(key string, value int, posic int) {
 	fm.numElements++
 }
 
-// func (fm *Hashmap) addWithCollision(key string, value int, posic int) {
+func (fm *Hashmap) addWithCollision(key string, value int, posic int) {
+	existingBucket := fm.buckets[posic]
 
-// }
+	// Head element
+	if existingBucket.key == key {
+		existingBucket.value = value
+		return
+	}
+
+	// Check if exists in the linked list
+	for existingBucket.next != nil {
+		existingBucket = *existingBucket.next
+		if existingBucket.key == key {
+			existingBucket.value = value
+			return
+		}
+	}
+
+	// It's a new element
+	newNode := new(bucket)
+	existingBucket.next = newNode
+	fm.numElements++
+}
 
 func (hm *Hashmap) Add(key string, value int) {
 	posic := hm.getBucketIndex(key)
 
+	fmt.Printf("%d\n", posic)
+
 	if hm.buckets[posic].key == "" {
 		hm.addWithNoCollision(key, value, posic)
+	} else {
+		hm.addWithCollision(key, value, posic)
 	}
-	// } else {
-	// 	addWithCollision(key, value, posic)
-	// }
 }
 
 func (hm *Hashmap) Size() uint {
@@ -65,17 +86,44 @@ func (hm *Hashmap) Size() uint {
 
 func (hm *Hashmap) Get(key string) (int, bool) {
 	posic := hm.getBucketIndex(key)
-	if hm.buckets[posic].key == "" {
+	existingBucket := hm.buckets[posic]
+
+	// Empty bucket
+	if existingBucket.key == "" {
 		return 0, true
 	}
 
-	_ = posic
+	// Matches with the head
+	if existingBucket.key == key {
+		return existingBucket.value, false
+	}
 
-	fmt.Printf("%v\n", hm.buckets)
+	// Look for the element in the linked list
+	for existingBucket.next != nil {
+		existingBucket = *existingBucket.next
+		if existingBucket.key == key {
+			return existingBucket.value, false
+		}
+	}
 
-	//if hm.buckets[posic] == nil {
-	//
-	//	}
-
-	return 0, false
+	return 0, true
 }
+
+// int posic = getBucketIndex(key);
+// Bucket bucket = this.bucket[posic];
+// if (bucket == null) {
+// 	return null;
+// }
+
+// if (bucket.key.equalsIgnoreCase(key)) {
+// 	return bucket.value;
+// }
+
+// while (bucket.next != null) {
+// 	bucket = bucket.next;
+// 	if (bucket.key.equalsIgnoreCase(key)) {
+// 		return bucket.value;
+// 	}
+// }
+
+// return null;
