@@ -9,7 +9,7 @@ type bucket struct {
 }
 
 type Hashmap struct {
-	buckets     []bucket
+	buckets     []*bucket
 	numElements uint
 }
 
@@ -23,7 +23,7 @@ type Hashmaper interface {
 
 func NewHashmap(numBuckets int) *Hashmap {
 	hashmap := new(Hashmap)
-	hashmap.buckets = make([]bucket, numBuckets)
+	hashmap.buckets = make([]*bucket, numBuckets)
 	hashmap.numElements = 0
 	return hashmap
 }
@@ -39,8 +39,11 @@ func (fm *Hashmap) getBucketIndex(key string) int {
 }
 
 func (fm *Hashmap) addWithNoCollision(key string, value int, posic int) {
-	fm.buckets[posic].key = key
-	fm.buckets[posic].value = value
+	newBucket := new(bucket)
+	newBucket.key = key
+	newBucket.value = value
+
+	fm.buckets[posic] = newBucket
 	fm.numElements++
 }
 
@@ -55,7 +58,7 @@ func (fm *Hashmap) addWithCollision(key string, value int, posic int) {
 
 	// Check if exists in the linked list
 	for existingBucket.next != nil {
-		existingBucket = *existingBucket.next
+		existingBucket = existingBucket.next
 		if existingBucket.key == key {
 			existingBucket.value = value
 			return
@@ -63,8 +66,10 @@ func (fm *Hashmap) addWithCollision(key string, value int, posic int) {
 	}
 
 	// It's a new element
-	newNode := new(bucket)
-	existingBucket.next = newNode
+	newNode := bucket{}
+	newNode.key = key
+	newNode.value = value
+	existingBucket.next = &newNode
 	fm.numElements++
 }
 
@@ -73,7 +78,7 @@ func (hm *Hashmap) Add(key string, value int) {
 
 	fmt.Printf("%d\n", posic)
 
-	if hm.buckets[posic].key == "" {
+	if hm.buckets[posic] == nil {
 		hm.addWithNoCollision(key, value, posic)
 	} else {
 		hm.addWithCollision(key, value, posic)
@@ -89,7 +94,7 @@ func (hm *Hashmap) Get(key string) (int, bool) {
 	existingBucket := hm.buckets[posic]
 
 	// Empty bucket
-	if existingBucket.key == "" {
+	if existingBucket == nil {
 		return 0, true
 	}
 
@@ -100,7 +105,7 @@ func (hm *Hashmap) Get(key string) (int, bool) {
 
 	// Look for the element in the linked list
 	for existingBucket.next != nil {
-		existingBucket = *existingBucket.next
+		existingBucket = existingBucket.next
 		if existingBucket.key == key {
 			return existingBucket.value, false
 		}
