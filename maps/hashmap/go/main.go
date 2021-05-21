@@ -50,4 +50,6 @@ func main() {
 	if value1, error := hm.Get("f"); !error {
 		fmt.Println("Key: f", value1)
 	}
+
+	fmt.Printf("%v\n", hm.GetKeys())
 }

@@ -114,21 +114,19 @@ func (hm *Hashmap) Get(key string) (int, bool) {
 	return 0, true
 }
 
-// int posic = getBucketIndex(key);
-// Bucket bucket = this.bucket[posic];
-// if (bucket == null) {
-// 	return null;
-// }
+func (hm *Hashmap) GetKeys() []string {
+	keys := make([]string, 0)
 
-// if (bucket.key.equalsIgnoreCase(key)) {
-// 	return bucket.value;
-// }
+	for _, bucket := range hm.buckets {
+		if bucket != nil {
+			keys = append(keys, bucket.key)
 
-// while (bucket.next != null) {
-// 	bucket = bucket.next;
-// 	if (bucket.key.equalsIgnoreCase(key)) {
-// 		return bucket.value;
-// 	}
-// }
+			for bucket.next != nil {
+				bucket = bucket.next
+				keys = append(keys, bucket.key)
+			}
+		}
+	}
 
-// return null;
+	return keys
+}
