@@ -130,3 +130,7 @@ func (hm *Hashmap) GetKeys() []string {
 
 	return keys
 }
+
+func (hm *Hashmap) Remove(key string) bool {
+	return true
+}
