@@ -132,5 +132,36 @@ func (hm *Hashmap) GetKeys() []string {
 }
 
 func (hm *Hashmap) Remove(key string) bool {
-	return true
+	posic := hm.getBucketIndex(key)
+
+	// Empty bucket
+	nodeData := hm.buckets[posic]
+	if nodeData == nil {
+		return false
+	}
+
+	isHead := true
+	for {
+		if nodeData.key == key {
+			if isHead && nodeData.next == nil {
+				hm.buckets[posic] = nil
+			} else if isHead && nodeData.next != nil {
+				hm.buckets[posic] = nodeData.next
+			} else {
+				nodeData = nodeData.next.next
+			}
+
+			hm.numElements--
+			return true
+		}
+
+		if nodeData.next == nil {
+			break
+		}
+
+		nodeData = nodeData.next
+		isHead = false
+	}
+
+	return false
 }
