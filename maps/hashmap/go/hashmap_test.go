@@ -31,4 +31,8 @@ func TestEmpty(t *testing.T) {
 	if value, error := hm.Get("key1"); !error {
 		t.Errorf("Expected an error, but no error and returned value %d\n", value)
 	}
+
+	if removed := hm.Remove("key1"); removed {
+		t.Errorf("Removed when no values in the hashMap")
+	}
 }

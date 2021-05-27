@@ -143,9 +143,9 @@ func (hm *Hashmap) Remove(key string) bool {
 	isHead := true
 	for {
 		if nodeData.key == key {
-			if isHead && nodeData.next == nil {
-				hm.buckets[posic] = nil
-			} else if isHead && nodeData.next != nil {
+			if isHead { //&& nodeData.next == nil {
+				//hm.buckets[posic] = nil
+				//} else if isHead && nodeData.next != nil {
 				hm.buckets[posic] = nodeData.next
 			} else {
 				nodeData = nodeData.next.next
