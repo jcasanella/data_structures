@@ -2,6 +2,7 @@ package main
 
 import (
 	"data_structures/data/structures/hashmap"
+	"strconv"
 	"testing"
 
 )
@@ -104,4 +105,87 @@ func TestAddElem(t *testing.T) {
 	if value, error := hm.Get("key1"); !error {
 		t.Errorf("Expected error but got noError and value %d\n", value)
 	}
+}
+
+func TestAddMultiple(t *testing.T) {
+	var hm *hashmap.Hashmap = hashmap.NewHashmap(10)
+
+	// Add first 5 elements
+	for idx := 0; idx < 5; idx++ {
+		strIdx := strconv.Itoa(idx)
+		hm.Add("key"+strIdx, 10+idx)
+	}
+
+	// Get number elements
+	if numElems := hm.Size(); numElems != 5 {
+		t.Errorf("Expected 5 elements but actual is %d\n", numElems)
+	}
+
+	// Get keys
+	if keys := hm.GetKeys(); len(keys) != 5 {
+		t.Errorf("Number of keys is not 5, actual is %d\n", len(keys))
+	}
+
+	// Check all the keys
+	for idx := 0; idx < 5; idx++ {
+		keys := hm.GetKeys()
+		strIdx := strconv.Itoa(idx)
+		if !contains("key"+strIdx, keys) {
+			t.Errorf("Not found key: key%s\n", strIdx)
+		}
+	}
+
+	// Get All values
+	for idx := 0; idx < 5; idx++ {
+		strIdx := strconv.Itoa(idx)
+		value, error := hm.Get("key" + strIdx)
+		if value != 10+idx {
+			t.Errorf("Expected value %d is different from atual %d\n", value, 10+idx)
+		}
+		if error {
+			t.Errorf("Get error but was not expected\n")
+		}
+	}
+
+	// Update value
+	hm.Add("key0", 100)
+	if value, _ := hm.Get("key0"); value != 100 {
+		t.Errorf("Value is %d that is different from 100\n", value)
+	}
+	hm.Add("key0", 10)
+	if value, _ := hm.Get("key0"); value != 10 {
+		t.Errorf("Value is %d that is different from 10\n", value)
+	}
+
+	if numElems := hm.Size(); numElems != 5 {
+		t.Errorf("Expected 5 elements but actual is %d\n", numElems)
+	}
+
+	/*hm.Add("key1", 15)
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)
+	hm.Add("key1", 15)*/
+}
+
+func contains(lookFor string, values []string) bool {
+	for _, value := range values {
+		if value == lookFor {
+			return true
+		}
+	}
+
+	return false
 }
