@@ -1,7 +1,5 @@
 package hashmap
 
-import "fmt"
-
 type bucket struct {
 	key   string
 	value int
@@ -75,8 +73,6 @@ func (fm *Hashmap) addWithCollision(key string, value int, posic int) {
 
 func (hm *Hashmap) Add(key string, value int) {
 	posic := hm.getBucketIndex(key)
-
-	fmt.Printf("%d\n", posic)
 
 	if hm.buckets[posic] == nil {
 		hm.addWithNoCollision(key, value, posic)
