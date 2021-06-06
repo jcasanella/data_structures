@@ -1,13 +1,13 @@
 package sorting
 
-func Bubble(values []int, size int) []int {
-	if size == 0 {
+func Bubble(values []int) []int {
+	if len(values) == 0 {
 		return nil
-	} else if size == 1 {
+	} else if len(values) == 1 {
 		return values
 	} else {
 		var (
-			limit  = size - 1
+			limit  = len(values) - 1
 			sorted = false
 		)
 
