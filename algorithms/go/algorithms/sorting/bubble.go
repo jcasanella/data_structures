@@ -14,9 +14,7 @@ func Bubble(values []int) []int {
 		for sorted == false {
 			for idx := 0; idx < limit; idx++ {
 				if values[idx] > values[idx+1] {
-					temp := values[idx]
-					values[idx] = values[idx+1]
-					values[idx+1] = temp
+					values[idx], values[idx+1] = values[idx+1], values[idx]
 				}
 			}
 
